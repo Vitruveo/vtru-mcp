@@ -2,7 +2,7 @@
   "name": "@vitruveo/vtru-mcp",
   "module": "src/index.ts",
   "type": "module",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Vitruveo MCP Server for read-only EVM operations on the Vitruveo blockchain.",
   "bin": {
     "vtru-mcp": "./bin/cli.js"
