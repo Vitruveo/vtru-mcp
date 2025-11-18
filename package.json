@@ -30,6 +30,7 @@
     "changelog:latest": "conventional-changelog -p angular -r 1 > RELEASE_NOTES.md"
   },
   "devDependencies": {
+    "bun": "latest",
     "@types/bun": "latest",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
