@@ -3,7 +3,7 @@ export default function HomePage() {
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
       <h1>Vitruveo MCP Server</h1>
       <p>
-        This deployment exposes an MCP server at <code>/api/mcp</code>.
+        This deployment exposes an MCP server at <code>/mcp</code>.
       </p>
     </main>
   );
