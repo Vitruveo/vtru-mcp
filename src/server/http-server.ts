@@ -193,7 +193,7 @@ process.on('SIGINT', () => {
 
 // Start the HTTP server on a different port (3001) to avoid conflicts
 const httpServer = app.listen(PORT, HOST, () => {
-  console.error(`Template MCP Server running at http://${HOST}:${PORT}`);
+  console.error(`Vitruveo MCP Server running at http://${HOST}:${PORT}`);
   console.error(`SSE endpoint: http://${HOST}:${PORT}/sse`);
   console.error(`Messages endpoint: http://${HOST}:${PORT}/messages (sessionId optional if only one connection)`);
   console.error(`Health check: http://${HOST}:${PORT}/health`);

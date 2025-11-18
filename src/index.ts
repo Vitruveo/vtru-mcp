@@ -7,9 +7,9 @@ async function main() {
     const server = await startServer();
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error("EVM MCP Server running on stdio");
+    console.error("Vitruveo MCP Server running on stdio");
   } catch (error) {
-    console.error("Error starting MCP server:", error);
+    console.error("Error starting Vitruveo MCP server:", error);
     process.exit(1);
   }
 }
