@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "vtru-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@vitruveo/vtru-mcp"
+      ]
+    },
+    "vtru-mcp-http": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@vitruveo/vtru-mcp", 
+        "--http"
+      ]
+    }
+  }
+} 
