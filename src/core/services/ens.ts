@@ -1,5 +1,5 @@
 import { normalize } from 'viem/ens';
-import { getPublicClient } from './clients.js';
+import { getPublicClient } from './clients.ts';
 import { type Address } from 'viem';
 
 /**

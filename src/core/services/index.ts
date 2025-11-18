@@ -1,13 +1,13 @@
 // Export all services
-export * from './clients.js';
-export * from './balance.js';
-export * from './transfer.js';
-export * from './blocks.js';
-export * from './transactions.js';
-export * from './contracts.js';
-export * from './tokens.js';
-export * from './ens.js';
-export { utils as helpers } from './utils.js';
+export * from './clients.ts';
+export * from './balance.ts';
+export * from './transfer.ts';
+export * from './blocks.ts';
+export * from './transactions.ts';
+export * from './contracts.ts';
+export * from './tokens.ts';
+export * from './ens.ts';
+export { utils as helpers } from './utils.ts';
 
 // Re-export common types for convenience
 export type { 

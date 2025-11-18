@@ -5,7 +5,7 @@ import {
   formatUnits,
   getContract
 } from 'viem';
-import { getPublicClient } from './clients.js';
+import { getPublicClient } from './clients.ts';
 
 // Standard ERC20 ABI (minimal for reading)
 const erc20Abi = [

@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getSupportedNetworks, getRpcUrl } from "./chains.js";
-import * as services from "./services/index.js";
+import { getSupportedNetworks, getRpcUrl } from "./chains.ts";
+import * as services from "./services/index.ts";
 import { type Address, type Hex, type Hash } from 'viem';
 import { normalize } from 'viem/ens';
 

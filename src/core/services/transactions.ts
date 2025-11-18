@@ -4,7 +4,7 @@ import {
   type TransactionReceipt,
   type EstimateGasParameters
 } from 'viem';
-import { getPublicClient } from './clients.js';
+import { getPublicClient } from './clients.ts';
 
 /**
  * Get a transaction by hash for a specific network

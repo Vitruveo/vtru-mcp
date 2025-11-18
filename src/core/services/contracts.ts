@@ -6,8 +6,8 @@ import {
   type GetLogsParameters,
   type Log
 } from 'viem';
-import { getPublicClient, getWalletClient } from './clients.js';
-import { resolveAddress } from './ens.js';
+import { getPublicClient, getWalletClient } from './clients.ts';
+import { resolveAddress } from './ens.ts';
 
 /**
  * Read from a contract for a specific network

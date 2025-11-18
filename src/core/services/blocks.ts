@@ -2,7 +2,7 @@ import {
   type Hash,
   type Block
 } from 'viem';
-import { getPublicClient } from './clients.js';
+import { getPublicClient } from './clients.ts';
 
 /**
  * Get the current block number for a specific network

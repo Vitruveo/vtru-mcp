@@ -5,9 +5,9 @@ import {
   type Abi,
   getContract
 } from 'viem';
-import { getPublicClient } from './clients.js';
-import { readContract } from './contracts.js';
-import { resolveAddress } from './ens.js';
+import { getPublicClient } from './clients.ts';
+import { readContract } from './contracts.ts';
+import { resolveAddress } from './ens.ts';
 
 // Standard ERC20 ABI (minimal for reading)
 const erc20Abi = [

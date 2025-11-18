@@ -8,7 +8,7 @@ import {
   type Address
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { getChain, getRpcUrl } from '../chains.js';
+import { getChain, getRpcUrl } from "../chains.ts";
 
 // Cache for clients to avoid recreating them for each request
 const clientCache = new Map<string, PublicClient>();

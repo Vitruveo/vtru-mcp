@@ -1,8 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { registerEVMResources } from "../core/resources.js";
-import { registerEVMTools } from "../core/tools.js";
-import { registerEVMPrompts } from "../core/prompts.js";
-import { getSupportedNetworks } from "../core/chains.js";
+import { registerEVMResources } from "../core/resources.ts"";
+import { registerEVMTools } from "../core/tools.ts"";
+import { registerEVMPrompts } from "../core/prompts.ts"";
+import { getSupportedNetworks } from "../core/chains.ts"";
 
 // Create and start the MCP server
 async function startServer() {

@@ -9,9 +9,9 @@ import {
   getContract,
   type Account
 } from 'viem';
-import { getPublicClient, getWalletClient } from './clients.js';
-import { getChain } from '../chains.js';
-import { resolveAddress } from './ens.js';
+import { getPublicClient, getWalletClient } from './clients.ts';
+import { getChain } from "../chains.ts";
+import { resolveAddress } from './ens.ts';
 
 // Standard ERC20 ABI for transfers
 const erc20TransferAbi = [

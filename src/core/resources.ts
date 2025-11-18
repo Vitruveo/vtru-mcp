@@ -1,6 +1,6 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getSupportedNetworks, getRpcUrl } from "./chains.js";
-import * as services from "./services/index.js";
+import { getSupportedNetworks, getRpcUrl } from "./chains.ts";
+import * as services from "./services/index.ts";
 import type { Address, Hash } from "viem";
 
 /**
