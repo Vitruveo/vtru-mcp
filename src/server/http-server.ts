@@ -6,7 +6,7 @@ import cors from "cors";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 // Environment variables - hardcoded values
-const PORT = 3001;
+const PORT = 3000;
 const HOST = '127.0.0.1';
 
 console.error(`Configured to listen on ${HOST}:${PORT}`);
