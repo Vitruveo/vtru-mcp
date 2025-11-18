@@ -9,24 +9,24 @@ import { getPublicClient } from './clients.ts';
 /**
  * Get a transaction by hash for a specific network
  */
-export async function getTransaction(hash: Hash, network = 'ethereum') {
-  const client = getPublicClient(network);
+export async function getTransaction(hash: Hash) {
+  const client = getPublicClient();
   return await client.getTransaction({ hash });
 }
 
 /**
  * Get a transaction receipt by hash for a specific network
  */
-export async function getTransactionReceipt(hash: Hash, network = 'ethereum'): Promise<TransactionReceipt> {
-  const client = getPublicClient(network);
+export async function getTransactionReceipt(hash: Hash): Promise<TransactionReceipt> {
+  const client = getPublicClient();
   return await client.getTransactionReceipt({ hash });
 }
 
 /**
  * Get the transaction count for an address for a specific network
  */
-export async function getTransactionCount(address: Address, network = 'ethereum'): Promise<number> {
-  const client = getPublicClient(network);
+export async function getTransactionCount(address: Address): Promise<number> {
+  const client = getPublicClient();
   const count = await client.getTransactionCount({ address });
   return Number(count);
 }
@@ -34,16 +34,16 @@ export async function getTransactionCount(address: Address, network = 'ethereum'
 /**
  * Estimate gas for a transaction for a specific network
  */
-export async function estimateGas(params: EstimateGasParameters, network = 'ethereum'): Promise<bigint> {
-  const client = getPublicClient(network);
+export async function estimateGas(params: EstimateGasParameters): Promise<bigint> {
+  const client = getPublicClient();
   return await client.estimateGas(params);
 }
 
 /**
  * Get the chain ID for a specific network
  */
-export async function getChainId(network = 'ethereum'): Promise<number> {
-  const client = getPublicClient(network);
+export async function getChainId(): Promise<number> {
+  const client = getPublicClient();
   const chainId = await client.getChainId();
   return Number(chainId);
 } 

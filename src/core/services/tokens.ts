@@ -79,8 +79,7 @@ const erc1155Abi = [
  * Get ERC20 token information
  */
 export async function getERC20TokenInfo(
-  tokenAddress: Address,
-  network: string = 'ethereum'
+  tokenAddress: Address
 ): Promise<{
   name: string;
   symbol: string;
@@ -88,7 +87,7 @@ export async function getERC20TokenInfo(
   totalSupply: bigint;
   formattedTotalSupply: string;
 }> {
-  const publicClient = getPublicClient(network);
+  const publicClient = getPublicClient();
 
   const contract = getContract({
     address: tokenAddress,
@@ -117,14 +116,13 @@ export async function getERC20TokenInfo(
  */
 export async function getERC721TokenMetadata(
   tokenAddress: Address,
-  tokenId: bigint,
-  network: string = 'ethereum'
+  tokenId: bigint
 ): Promise<{
   name: string;
   symbol: string;
   tokenURI: string;
 }> {
-  const publicClient = getPublicClient(network);
+  const publicClient = getPublicClient();
 
   const contract = getContract({
     address: tokenAddress,
@@ -150,10 +148,9 @@ export async function getERC721TokenMetadata(
  */
 export async function getERC1155TokenURI(
   tokenAddress: Address,
-  tokenId: bigint,
-  network: string = 'ethereum'
+  tokenId: bigint
 ): Promise<string> {
-  const publicClient = getPublicClient(network);
+  const publicClient = getPublicClient();
 
   const contract = getContract({
     address: tokenAddress,

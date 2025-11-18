@@ -10,13 +10,15 @@ import {
 import { privateKeyToAccount } from 'viem/accounts';
 import { getChain, getRpcUrl } from "../chains.ts";
 
+const network = "vitruveo";
+
 // Cache for clients to avoid recreating them for each request
 const clientCache = new Map<string, PublicClient>();
 
 /**
  * Get a public client for a specific network
  */
-export function getPublicClient(network = 'ethereum'): PublicClient {
+export function getPublicClient(): PublicClient {
   const cacheKey = String(network);
   
   // Return cached client if available
@@ -42,7 +44,7 @@ export function getPublicClient(network = 'ethereum'): PublicClient {
 /**
  * Create a wallet client for a specific network and private key
  */
-export function getWalletClient(privateKey: Hex, network = 'ethereum'): WalletClient {
+export function getWalletClient(privateKey: Hex): WalletClient {
   const chain = getChain(network);
   const rpcUrl = getRpcUrl(network);
   const account = privateKeyToAccount(privateKey);

@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getSupportedNetworks, getRpcUrl } from "./chains.ts";
-import * as services from "./services/index.ts";
+import { getSupportedNetworks, getRpcUrl } from "./chains.js";
+import * as services from "./services/index.js";
 import { type Address, type Hex, type Hash } from 'viem';
 import { normalize } from 'viem/ens';
 
@@ -244,7 +244,7 @@ export function registerEVMTools(server: McpServer) {
   // Get VTRU balance
   server.tool(
     "get_balance",
-    "Get the VTRU balance for an address", 
+    "Get VTRU balance for an address", 
     {
       address: z.string().describe("The wallet address to check the balance for"),
 
@@ -426,7 +426,7 @@ export function registerEVMTools(server: McpServer) {
     "Estimate the gas cost for a transaction",
     {
       to: z.string().describe("The recipient address"),
-      value: z.string().optional().describe("The amount of VTRU to send in ether (e.g., '0.1')"),
+      value: z.string().optional().describe("The amount of VTRU to send (e.g., '0.1')"),
       data: z.string().optional().describe("The transaction data as a hex string"),
 
     },

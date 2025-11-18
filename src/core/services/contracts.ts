@@ -12,8 +12,8 @@ import { resolveAddress } from './ens.ts';
 /**
  * Read from a contract for a specific network
  */
-export async function readContract(params: ReadContractParameters, network = 'ethereum') {
-  const client = getPublicClient(network);
+export async function readContract(params: ReadContractParameters) {
+  const client = getPublicClient();
   return await client.readContract(params);
 }
 
@@ -22,32 +22,30 @@ export async function readContract(params: ReadContractParameters, network = 'et
  */
 export async function writeContract(
   privateKey: Hex, 
-  params: Record<string, any>, 
-  network = 'ethereum'
+  params: Record<string, any>
 ): Promise<Hash> {
-  const client = getWalletClient(privateKey, network);
+  const client = getWalletClient(privateKey);
   return await client.writeContract(params as any);
 }
 
 /**
  * Get logs for a specific network
  */
-export async function getLogs(params: GetLogsParameters, network = 'ethereum'): Promise<Log[]> {
-  const client = getPublicClient(network);
+export async function getLogs(params: GetLogsParameters): Promise<Log[]> {
+  const client = getPublicClient();
   return await client.getLogs(params);
 }
 
 /**
  * Check if an address is a contract
  * @param addressOrEns Address or ENS name to check
- * @param network Network name or chain ID
  * @returns True if the address is a contract, false if it's an EOA
  */
-export async function isContract(addressOrEns: string, network = 'ethereum'): Promise<boolean> {
+export async function isContract(addressOrEns: string): Promise<boolean> {
   // Resolve ENS name to address if needed
-  const address = await resolveAddress(addressOrEns, network);
+  const address = await resolveAddress(addressOrEns);
   
-  const client = getPublicClient(network);
+  const client = getPublicClient();
   const code = await client.getBytecode({ address });
   return code !== undefined && code !== '0x';
 } 

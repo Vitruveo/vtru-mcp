@@ -3,6 +3,7 @@ import { getSupportedNetworks, getRpcUrl } from "./chains.ts";
 import * as services from "./services/index.ts";
 import type { Address, Hash } from "viem";
 
+const network = "vitruveo";
 /**
  * Register all EVM-related resources
  * @param server The MCP server instance
@@ -14,7 +15,6 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/chain", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const chainId = await services.getChainId(network);
         const blockNumber = await services.getBlockNumber(network);
         const rpcUrl = getRpcUrl(network);
@@ -47,7 +47,6 @@ export function registerEVMResources(server: McpServer) {
     "evm://chain",
     async (uri) => {
       try {
-        const network = "ethereum";
         const chainId = await services.getChainId(network);
         const blockNumber = await services.getBlockNumber(network);
         const rpcUrl = getRpcUrl(network);
@@ -80,9 +79,8 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/block/{blockNumber}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const blockNumber = params.blockNumber as string;
-        const block = await services.getBlockByNumber(parseInt(blockNumber), network);
+        const block = await services.getBlockByNumber(parseInt(blockNumber));
         
         return {
           contents: [{
@@ -107,9 +105,8 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/block/hash/{blockHash}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const blockHash = params.blockHash as string;
-        const block = await services.getBlockByHash(blockHash as Hash, network);
+        const block = await services.getBlockByHash(blockHash as Hash);
         
         return {
           contents: [{
@@ -134,7 +131,6 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/block/latest", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const block = await services.getLatestBlock(network);
         
         return {
@@ -160,7 +156,6 @@ export function registerEVMResources(server: McpServer) {
     "evm://block/latest",
     async (uri) => {
       try {
-        const network = "ethereum";
         const block = await services.getLatestBlock(network);
         
         return {
@@ -180,15 +175,14 @@ export function registerEVMResources(server: McpServer) {
     }
   );
 
-  // Get ETH balance for a specific network
+  // Get VTRU balance for a specific network
   server.resource(
     "evm_address_native_balance",
     new ResourceTemplate("evm://{network}/address/{address}/balance", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const address = params.address as string;
-        const balance = await services.getETHBalance(address as Address, network);
+        const balance = await services.getVTRUBalance(address as Address);
         
         return {
           contents: [{
@@ -207,22 +201,21 @@ export function registerEVMResources(server: McpServer) {
         return {
           contents: [{
             uri: uri.href,
-            text: `Error fetching ETH balance: ${error instanceof Error ? error.message : String(error)}`
+            text: `Error fetching VTRU balance: ${error instanceof Error ? error.message : String(error)}`
           }]
         };
       }
     }
   );
 
-  // Default ETH balance (Ethereum mainnet)
+  // Default VTRU balance (Ethereum mainnet)
   server.resource(
     "default_eth_balance",
     new ResourceTemplate("evm://address/{address}/eth-balance", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = "ethereum";
         const address = params.address as string;
-        const balance = await services.getETHBalance(address as Address, network);
+        const balance = await services.getVTRUBalance(address as Address);
         
         return {
           contents: [{
@@ -241,7 +234,7 @@ export function registerEVMResources(server: McpServer) {
         return {
           contents: [{
             uri: uri.href,
-            text: `Error fetching ETH balance: ${error instanceof Error ? error.message : String(error)}`
+            text: `Error fetching VTRU balance: ${error instanceof Error ? error.message : String(error)}`
           }]
         };
       }
@@ -254,14 +247,12 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/address/{address}/token/{tokenAddress}/balance", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const address = params.address as string;
         const tokenAddress = params.tokenAddress as string;
         
         const balance = await services.getERC20Balance(
           tokenAddress as Address,
-          address as Address,
-          network
+          address as Address
         );
         
         return {
@@ -296,14 +287,12 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://address/{address}/token/{tokenAddress}/balance", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = "ethereum";
         const address = params.address as string;
         const tokenAddress = params.tokenAddress as string;
         
         const balance = await services.getERC20Balance(
           tokenAddress as Address,
-          address as Address,
-          network
+          address as Address
         );
         
         return {
@@ -338,9 +327,8 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/tx/{txHash}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const txHash = params.txHash as string;
-        const tx = await services.getTransaction(txHash as Hash, network);
+        const tx = await services.getTransaction(txHash as Hash);
         
         return {
           contents: [{
@@ -365,9 +353,8 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://tx/{txHash}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = "ethereum";
         const txHash = params.txHash as string;
-        const tx = await services.getTransaction(txHash as Hash, network);
+        const tx = await services.getTransaction(txHash as Hash);
         
         return {
           contents: [{
@@ -386,32 +373,32 @@ export function registerEVMResources(server: McpServer) {
     }
   );
 
-  // Get supported networks
-  server.resource(
-    "supported_networks",
-    "evm://networks",
-    async (uri) => {
-      try {
-        const networks = getSupportedNetworks();
+  // // Get supported networks
+  // server.resource(
+  //   "supported_networks",
+  //   "evm://networks",
+  //   async (uri) => {
+  //     try {
+  //       const networks = getSupportedNetworks();
         
-        return {
-          contents: [{
-            uri: uri.href,
-            text: JSON.stringify({
-              supportedNetworks: networks
-            }, null, 2)
-          }]
-        };
-      } catch (error) {
-        return {
-          contents: [{
-            uri: uri.href,
-            text: `Error fetching supported networks: ${error instanceof Error ? error.message : String(error)}`
-          }]
-        };
-      }
-    }
-  );
+  //       return {
+  //         contents: [{
+  //           uri: uri.href,
+  //           text: JSON.stringify({
+  //             supportedNetworks: networks
+  //           }, null, 2)
+  //         }]
+  //       };
+  //     } catch (error) {
+  //       return {
+  //         contents: [{
+  //           uri: uri.href,
+  //           text: `Error fetching supported networks: ${error instanceof Error ? error.message : String(error)}`
+  //         }]
+  //       };
+  //     }
+  //   }
+  // );
 
   // Add ERC20 token info resource
   server.resource(
@@ -419,10 +406,9 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/token/{tokenAddress}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const tokenAddress = params.tokenAddress as Address;
         
-        const tokenInfo = await services.getERC20TokenInfo(tokenAddress, network);
+        const tokenInfo = await services.getERC20TokenInfo(tokenAddress);
         
         return {
           contents: [{
@@ -451,11 +437,10 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/token/{tokenAddress}/balanceOf/{address}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const tokenAddress = params.tokenAddress as Address;
         const address = params.address as Address;
         
-        const balance = await services.getERC20Balance(tokenAddress, address, network);
+        const balance = await services.getERC20Balance(tokenAddress, address);
         
         return {
           contents: [{
@@ -488,16 +473,15 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/nft/{tokenAddress}/{tokenId}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const tokenAddress = params.tokenAddress as Address;
         const tokenId = BigInt(params.tokenId as string);
         
-        const nftInfo = await services.getERC721TokenMetadata(tokenAddress, tokenId, network);
+        const nftInfo = await services.getERC721TokenMetadata(tokenAddress, tokenId);
         
         // Get owner separately
         let owner = "Unknown";
         try {
-          const isOwner = await services.isNFTOwner(tokenAddress, params.address as Address, tokenId, network);
+          const isOwner = await services.isNFTOwner(tokenAddress, params.address as Address, tokenId);
           if (isOwner) {
             owner = params.address as string;
           }
@@ -534,12 +518,11 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/nft/{tokenAddress}/{tokenId}/isOwnedBy/{address}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const tokenAddress = params.tokenAddress as Address;
         const tokenId = BigInt(params.tokenId as string);
         const address = params.address as Address;
         
-        const isOwner = await services.isNFTOwner(tokenAddress, address, tokenId, network);
+        const isOwner = await services.isNFTOwner(tokenAddress, address, tokenId);
         
         return {
           contents: [{
@@ -570,11 +553,10 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/erc1155/{tokenAddress}/{tokenId}/uri", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const tokenAddress = params.tokenAddress as Address;
         const tokenId = BigInt(params.tokenId as string);
         
-        const tokenURI = await services.getERC1155TokenURI(tokenAddress, tokenId, network);
+        const tokenURI = await services.getERC1155TokenURI(tokenAddress, tokenId);
         
         return {
           contents: [{
@@ -604,12 +586,11 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/erc1155/{tokenAddress}/{tokenId}/balanceOf/{address}", { list: undefined }),
     async (uri, params) => {
       try {
-        const network = params.network as string;
         const tokenAddress = params.tokenAddress as Address;
         const tokenId = BigInt(params.tokenId as string);
         const address = params.address as Address;
         
-        const balance = await services.getERC1155Balance(tokenAddress, address, tokenId, network);
+        const balance = await services.getERC1155Balance(tokenAddress, address, tokenId);
         
         return {
           contents: [{

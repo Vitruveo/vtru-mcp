@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
+const network = "vitruveo";
 /**
  * Register all EVM-related prompts with the MCP server
  * @param server The MCP server instance
@@ -11,10 +12,9 @@ export function registerEVMPrompts(server: McpServer) {
     "explore_block",
     "Explore information about a specific block",
     {
-      blockNumber: z.string().optional().describe("Block number to explore. If not provided, latest block will be used."),
-      network: z.string().optional().describe("Network name (e.g., 'ethereum', 'optimism', 'arbitrum', 'base', etc.) or chain ID. Supports all EVM-compatible networks. Defaults to Ethereum mainnet.")
+      blockNumber: z.string().optional().describe("Block number to explore. If not provided, latest block will be used.")
     },
-    ({ blockNumber, network = "ethereum" }) => ({
+    ({ blockNumber }) => ({
       messages: [{
         role: "user",
         content: {
@@ -32,10 +32,9 @@ export function registerEVMPrompts(server: McpServer) {
     "analyze_transaction",
     "Analyze a specific transaction",
     {
-      txHash: z.string().describe("Transaction hash to analyze"),
-      network: z.string().optional().describe("Network name (e.g., 'ethereum', 'optimism', 'arbitrum', 'base', etc.) or chain ID. Supports all EVM-compatible networks. Defaults to Ethereum mainnet.")
+      txHash: z.string().describe("Transaction hash to analyze")
     },
-    ({ txHash, network = "ethereum" }) => ({
+    ({ txHash }) => ({
       messages: [{
         role: "user",
         content: {
@@ -51,10 +50,9 @@ export function registerEVMPrompts(server: McpServer) {
     "analyze_address",
     "Analyze an EVM address",
     {
-      address: z.string().describe("Ethereum address to analyze"),
-      network: z.string().optional().describe("Network name (e.g., 'ethereum', 'optimism', 'arbitrum', 'base', etc.) or chain ID. Supports all EVM-compatible networks. Defaults to Ethereum mainnet.")
+      address: z.string().describe("Ethereum address to analyze")
     },
-    ({ address, network = "ethereum" }) => ({
+    ({ address }) => ({
       messages: [{
         role: "user",
         content: {
@@ -71,10 +69,9 @@ export function registerEVMPrompts(server: McpServer) {
     "Get guidance on interacting with a smart contract",
     {
       contractAddress: z.string().describe("The contract address"),
-      abiJson: z.string().optional().describe("The contract ABI as a JSON string"),
-      network: z.string().optional().describe("Network name or chain ID. Defaults to Ethereum mainnet.")
+      abiJson: z.string().optional().describe("The contract ABI as a JSON string")
     },
-    ({ contractAddress, abiJson, network = "ethereum" }) => ({
+    ({ contractAddress, abiJson }) => ({
       messages: [{
         role: "user",
         content: {
@@ -105,26 +102,26 @@ export function registerEVMPrompts(server: McpServer) {
     })
   );
 
-  // Network comparison
-  server.prompt(
-    "compare_networks",
-    "Compare different EVM-compatible networks",
-    {
-      networkList: z.string().describe("Comma-separated list of networks to compare (e.g., 'ethereum,optimism,arbitrum')")
-    },
-    ({ networkList }) => {
-      const networks = networkList.split(',').map(n => n.trim());
-      return {
-        messages: [{
-          role: "user",
-          content: {
-            type: "text",
-            text: `Please compare the following EVM-compatible networks: ${networks.join(', ')}. Include information about their architecture, gas fees, transaction speed, security, and any other relevant differences.`
-          }
-        }]
-      };
-    }
-  );
+  // // Network comparison
+  // server.prompt(
+  //   "compare_networks",
+  //   "Compare different EVM-compatible networks",
+  //   {
+  //     networkList: z.string().describe("Comma-separated list of networks to compare (e.g., 'ethereum,optimism,arbitrum')")
+  //   },
+  //   ({ networkList }) => {
+  //     const networks = networkList.split(',').map(n => n.trim());
+  //     return {
+  //       messages: [{
+  //         role: "user",
+  //         content: {
+  //           type: "text",
+  //           text: `Please compare the following EVM-compatible networks: ${networks.join(', ')}. Include information about their architecture, gas fees, transaction speed, security, and any other relevant differences.`
+  //         }
+  //       }]
+  //     };
+  //   }
+  // );
 
   // Token analysis prompt
   server.prompt(
@@ -133,10 +130,9 @@ export function registerEVMPrompts(server: McpServer) {
     {
       tokenAddress: z.string().describe("Token contract address to analyze"),
       tokenType: z.string().optional().describe("Type of token to analyze (erc20, erc721/nft, or auto-detect). Defaults to auto."),
-      tokenId: z.string().optional().describe("Token ID (required for NFT analysis)"),
-      network: z.string().optional().describe("Network name (e.g., 'ethereum', 'optimism', 'arbitrum', 'base', etc.) or chain ID. Supports all EVM-compatible networks. Defaults to Ethereum mainnet.")
+      tokenId: z.string().optional().describe("Token ID (required for NFT analysis)")
     },
-    ({ tokenAddress, tokenType = "auto", tokenId, network = "ethereum" }) => {
+    ({ tokenAddress, tokenType = "auto", tokenId }) => {
       let promptText = "";
       
       if (tokenType === "erc20" || tokenType === "auto") {

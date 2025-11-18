@@ -5,12 +5,10 @@ import { type Address } from 'viem';
 /**
  * Resolves an ENS name to an Ethereum address or returns the original address if it's already valid
  * @param addressOrEns An Ethereum address or ENS name
- * @param network The network to use for ENS resolution (defaults to Ethereum mainnet)
  * @returns The resolved Ethereum address
  */
 export async function resolveAddress(
-  addressOrEns: string,
-  network = 'ethereum'
+  addressOrEns: string
 ): Promise<Address> {
   // If it's already a valid Ethereum address (0x followed by 40 hex chars), return it
   if (/^0x[a-fA-F0-9]{40}$/.test(addressOrEns)) {
@@ -24,7 +22,7 @@ export async function resolveAddress(
       const normalizedEns = normalize(addressOrEns);
       
       // Get the public client for the network
-      const publicClient = getPublicClient(network);
+      const publicClient = getPublicClient();
       
       // Resolve the ENS name to an address
       const address = await publicClient.getEnsAddress({
