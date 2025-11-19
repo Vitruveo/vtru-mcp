@@ -1,9 +1,9 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getSupportedNetworks, getRpcUrl } from "./chains.ts";
+import { getRpcUrl, DEFAULT_NETWORK } from "./chains.ts";
 import * as services from "./services/index.ts";
 import type { Address, Hash } from "viem";
 
-const network = "vitruveo";
+
 /**
  * Register all EVM-related resources
  * @param server The MCP server instance
@@ -15,15 +15,15 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/chain", { list: undefined }),
     async (uri, params) => {
       try {
-        const chainId = await services.getChainId(network);
-        const blockNumber = await services.getBlockNumber(network);
-        const rpcUrl = getRpcUrl(network);
+        const chainId = await services.getChainId();
+        const blockNumber = await services.getBlockNumber();
+        const rpcUrl = getRpcUrl();
         
         return {
           contents: [{
             uri: uri.href,
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               chainId,
               blockNumber: blockNumber.toString(),
               rpcUrl
@@ -47,15 +47,15 @@ export function registerEVMResources(server: McpServer) {
     "evm://chain",
     async (uri) => {
       try {
-        const chainId = await services.getChainId(network);
-        const blockNumber = await services.getBlockNumber(network);
-        const rpcUrl = getRpcUrl(network);
+        const chainId = await services.getChainId();
+        const blockNumber = await services.getBlockNumber();
+        const rpcUrl = getRpcUrl();
         
         return {
           contents: [{
             uri: uri.href,
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               chainId,
               blockNumber: blockNumber.toString(),
               rpcUrl
@@ -131,7 +131,7 @@ export function registerEVMResources(server: McpServer) {
     new ResourceTemplate("evm://{network}/block/latest", { list: undefined }),
     async (uri, params) => {
       try {
-        const block = await services.getLatestBlock(network);
+        const block = await services.getLatestBlock();
         
         return {
           contents: [{
@@ -156,7 +156,7 @@ export function registerEVMResources(server: McpServer) {
     "evm://block/latest",
     async (uri) => {
       try {
-        const block = await services.getLatestBlock(network);
+        const block = await services.getLatestBlock();
         
         return {
           contents: [{
@@ -188,7 +188,7 @@ export function registerEVMResources(server: McpServer) {
           contents: [{
             uri: uri.href,
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               address,
               balance: {
                 wei: balance.wei.toString(),
@@ -221,7 +221,7 @@ export function registerEVMResources(server: McpServer) {
           contents: [{
             uri: uri.href,
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               address,
               balance: {
                 wei: balance.wei.toString(),
@@ -259,7 +259,7 @@ export function registerEVMResources(server: McpServer) {
           contents: [{
             uri: uri.href,
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               address,
               tokenAddress,
               balance: {
@@ -299,7 +299,7 @@ export function registerEVMResources(server: McpServer) {
           contents: [{
             uri: uri.href,
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               address,
               tokenAddress,
               balance: {
@@ -415,7 +415,7 @@ export function registerEVMResources(server: McpServer) {
             uri: uri.href,
             text: JSON.stringify({
               address: tokenAddress,
-              network,
+              DEFAULT_NETWORK,
               ...tokenInfo
             }, null, 2)
           }]
@@ -448,7 +448,7 @@ export function registerEVMResources(server: McpServer) {
             text: JSON.stringify({
               tokenAddress,
               owner: address,
-              network,
+              DEFAULT_NETWORK,
               raw: balance.raw.toString(),
               formatted: balance.formatted,
               symbol: balance.token.symbol,
@@ -495,7 +495,7 @@ export function registerEVMResources(server: McpServer) {
             text: JSON.stringify({
               contract: tokenAddress,
               tokenId: tokenId.toString(),
-              network,
+              DEFAULT_NETWORK,
               ...nftInfo,
               owner
             }, null, 2)
@@ -531,7 +531,7 @@ export function registerEVMResources(server: McpServer) {
               contract: tokenAddress,
               tokenId: tokenId.toString(),
               owner: address,
-              network,
+              DEFAULT_NETWORK,
               isOwner
             }, null, 2)
           }]
@@ -564,7 +564,7 @@ export function registerEVMResources(server: McpServer) {
             text: JSON.stringify({
               contract: tokenAddress,
               tokenId: tokenId.toString(),
-              network,
+              DEFAULT_NETWORK,
               uri: tokenURI
             }, null, 2)
           }]
@@ -599,7 +599,7 @@ export function registerEVMResources(server: McpServer) {
               contract: tokenAddress,
               tokenId: tokenId.toString(),
               owner: address,
-              network,
+              DEFAULT_NETWORK,
               balance: balance.toString()
             }, null, 2)
           }]

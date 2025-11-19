@@ -50,7 +50,7 @@ export function registerEVMPrompts(server: McpServer) {
     "analyze_address",
     "Analyze an EVM address",
     {
-      address: z.string().describe("Ethereum address to analyze")
+      address: z.string().describe("Vitruveo address to analyze")
     },
     ({ address }) => ({
       messages: [{

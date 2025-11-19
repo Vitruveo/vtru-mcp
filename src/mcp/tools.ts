@@ -1,15 +1,14 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getSupportedNetworks, getRpcUrl } from "./chains.ts";
+import { getSupportedNetworks, getRpcUrl, DEFAULT_NETWORK } from "./chains.ts";
 import * as services from "./services/index.ts";
 import { type Address, type Hex, type Hash } from 'viem';
 import { normalize } from 'viem/ens';
 
-const network = 'vitruveo';
+
 /**
  * Register all EVM-related tools with the MCP server
  * 
- * All tools that accept Ethereum addresses also support ENS names (e.g., 'vitalik.eth').
  * ENS names are automatically resolved to addresses using the Ethereum Name Service.
  * 
  * @param server The MCP server instance
@@ -28,9 +27,6 @@ export function registerEVMTools(server: McpServer) {
     },
     async () => {
       try {
-        const chainId = await services.getChainId(network);
-        const blockNumber = await services.getBlockNumber(network);
-        const rpcUrl = getRpcUrl(network);
         
         return {
           content: [{
@@ -71,15 +67,15 @@ export function registerEVMTools(server: McpServer) {
     },
     async () => {
       try {
-        const chainId = await services.getChainId(network);
-        const blockNumber = await services.getBlockNumber(network);
-        const rpcUrl = getRpcUrl(network);
+        const chainId = await services.getChainId();
+        const blockNumber = await services.getBlockNumber();
+        const rpcUrl = getRpcUrl();
         
         return {
           content: [{
             type: "text",
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               chainId,
               blockNumber: blockNumber.toString(),
               rpcUrl
@@ -219,7 +215,7 @@ export function registerEVMTools(server: McpServer) {
     },
     async () => {
       try {
-        const block = await services.getLatestBlock(network);
+        const block = await services.getLatestBlock();
         
         return {
           content: [{
@@ -258,7 +254,7 @@ export function registerEVMTools(server: McpServer) {
             type: "text",
             text: JSON.stringify({
               address,
-              network,
+              DEFAULT_NETWORK,
               wei: balance.wei.toString(),
               ether: balance.ether
             }, null, 2)
@@ -279,9 +275,9 @@ export function registerEVMTools(server: McpServer) {
   // Get ERC20 balance
   server.tool(
     "get_erc20_balance",
-    "Get the ERC20 token balance of an Ethereum address",
+    "Get the ERC20 token balance of a Vitruveo address",
     {
-      address: z.string().describe("The Ethereum address to check"),
+      address: z.string().describe("The Vitruveo address to check"),
       tokenAddress: z.string().describe("The ERC20 token contract address")
 
     },
@@ -289,8 +285,7 @@ export function registerEVMTools(server: McpServer) {
       try {
         const balance = await services.getERC20Balance(
           tokenAddress as Address,
-          address as Address,
-          network
+          address as Address
         );
         
         return {
@@ -299,7 +294,7 @@ export function registerEVMTools(server: McpServer) {
             text: JSON.stringify({
               address,
               tokenAddress,
-              network,
+              DEFAULT_NETWORK,
               balance: {
                 raw: balance.raw.toString(),
                 formatted: balance.formatted,
@@ -339,7 +334,7 @@ export function registerEVMTools(server: McpServer) {
             text: JSON.stringify({
               tokenAddress,
               owner: ownerAddress,
-              network,
+              DEFAULT_NETWORK,
               raw: balance.raw.toString(),
               formatted: balance.formatted,
               symbol: balance.token.symbol,
@@ -448,7 +443,7 @@ export function registerEVMTools(server: McpServer) {
           content: [{
             type: "text",
             text: JSON.stringify({
-              network,
+              DEFAULT_NETWORK,
               estimatedGas: gas.toString()
             }, null, 2)
           }]
@@ -497,7 +492,7 @@ export function registerEVMTools(server: McpServer) {
   //       return {
   //         content: [{
   //           type: "text",
-  //           text: `Error transferring VTRU: ${error instanceof Error ? error.message : String(error)}`
+  //           text: `Error transferring ETH: ${error instanceof Error ? error.message : String(error)}`
   //         }],
   //         isError: true
   //       };
@@ -876,7 +871,7 @@ export function registerEVMTools(server: McpServer) {
             type: "text",
             text: JSON.stringify({
               address,
-              network,
+              DEFAULT_NETWORK,
               isContract,
               type: isContract ? "Contract" : "Externally Owned Account (EOA)"
             }, null, 2)
@@ -899,7 +894,7 @@ export function registerEVMTools(server: McpServer) {
     "get_token_info",
     "Get comprehensive information about an ERC20 token including name, symbol, decimals, total supply, and other metadata. Use this to analyze any token on EVM chains.",
     {
-      tokenAddress: z.string().describe("The contract address of the ERC20 token (e.g., '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' for USDC on Ethereum)")
+      tokenAddress: z.string().describe("The contract address of the ERC20 token")
     },
     async ({ tokenAddress }) => {
       try {
@@ -910,7 +905,7 @@ export function registerEVMTools(server: McpServer) {
             type: "text",
             text: JSON.stringify({
               address: tokenAddress,
-              network,
+              DEFAULT_NETWORK,
               ...tokenInfo
             }, null, 2)
           }]
@@ -950,7 +945,7 @@ export function registerEVMTools(server: McpServer) {
             text: JSON.stringify({
               address,
               tokenAddress,
-              network,
+              DEFAULT_NETWORK,
               balance: {
                 raw: balance.raw.toString(),
                 formatted: balance.formatted,
@@ -977,22 +972,20 @@ export function registerEVMTools(server: McpServer) {
     "Get detailed information about a specific NFT (ERC721 token), including collection name, symbol, token URI, and current owner if available.",
     {
       tokenAddress: z.string().describe("The contract address of the NFT collection (e.g., '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D' for Bored Ape Yacht Club)"),
-      tokenId: z.string().describe("The ID of the specific NFT token to query (e.g., '1234')"),
-      network: z.string().optional().describe("Network name (e.g., 'vitruveo', 'optimism', 'arbitrum', 'base', 'polygon') or chain ID. Most NFTs are on Ethereum mainnet, which is the default.")
+      tokenId: z.string().describe("The ID of the specific NFT token to query (e.g., '1234')")
     },
     async ({ tokenAddress, tokenId }) => {
       try {
         const nftInfo = await services.getERC721TokenMetadata(
           tokenAddress as Address, 
-          BigInt(tokenId), 
-          network
+          BigInt(tokenId)
         );
         
         // Check ownership separately
         let owner = null;
         try {
           // This may fail if tokenId doesn't exist
-          owner = await services.getPublicClient(network).readContract({
+          owner = await services.getPublicClient().readContract({
             address: tokenAddress as Address,
             abi: [{ 
               inputs: [{ type: 'uint256' }], 
@@ -1014,7 +1007,7 @@ export function registerEVMTools(server: McpServer) {
             text: JSON.stringify({
               contract: tokenAddress,
               tokenId,
-              network,
+              DEFAULT_NETWORK,
               ...nftInfo,
               owner: owner || 'Unknown'
             }, null, 2)
@@ -1047,8 +1040,7 @@ export function registerEVMTools(server: McpServer) {
         const isOwner = await services.isNFTOwner(
           tokenAddress,
           ownerAddress,
-          BigInt(tokenId),
-          network
+          BigInt(tokenId)
         );
         
         return {
@@ -1058,7 +1050,7 @@ export function registerEVMTools(server: McpServer) {
               tokenAddress,
               tokenId,
               ownerAddress,
-              network,
+              DEFAULT_NETWORK,
               isOwner,
               result: isOwner ? "Address owns this NFT" : "Address does not own this NFT"
             }, null, 2)
@@ -1082,15 +1074,13 @@ export function registerEVMTools(server: McpServer) {
     "Get the metadata URI for an ERC1155 token (multi-token standard used for both fungible and non-fungible tokens). The URI typically points to JSON metadata about the token.",
     {
       tokenAddress: z.string().describe("The contract address of the ERC1155 token collection (e.g., '0x76BE3b62873462d2142405439777e971754E8E77')"),
-      tokenId: z.string().describe("The ID of the specific token to query metadata for (e.g., '1234')"),
-      network: z.string().optional().describe("Network name (e.g., 'vitruveo', 'optimism', 'arbitrum', 'base', 'polygon') or chain ID. ERC1155 tokens exist across many networks. Defaults to Ethereum mainnet.")
+      tokenId: z.string().describe("The ID of the specific token to query metadata for (e.g., '1234')")
     },
     async ({ tokenAddress, tokenId }) => {
       try {
         const uri = await services.getERC1155TokenURI(
           tokenAddress as Address, 
-          BigInt(tokenId), 
-          network
+          BigInt(tokenId)
         );
         
         return {
@@ -1099,7 +1089,7 @@ export function registerEVMTools(server: McpServer) {
             text: JSON.stringify({
               contract: tokenAddress,
               tokenId,
-              network,
+              DEFAULT_NETWORK,
               uri
             }, null, 2)
           }]
@@ -1122,15 +1112,13 @@ export function registerEVMTools(server: McpServer) {
     "Get the total number of NFTs owned by an address from a specific collection. This returns the count of NFTs, not individual token IDs.",
     {
       tokenAddress: z.string().describe("The contract address of the NFT collection (e.g., '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D' for Bored Ape Yacht Club)"),
-      ownerAddress: z.string().describe("The wallet address to check the NFT balance for (e.g., '0x1234...')"),
-      network: z.string().optional().describe("Network name (e.g., 'vitruveo', 'optimism', 'arbitrum', 'base', 'polygon') or chain ID. Most NFTs are on Ethereum mainnet, which is the default.")
+      ownerAddress: z.string().describe("The wallet address to check the NFT balance for (e.g., '0x1234...')")
     },
     async ({ tokenAddress, ownerAddress }) => {
       try {
         const balance = await services.getERC721Balance(
           tokenAddress as Address, 
-          ownerAddress as Address, 
-          network
+          ownerAddress as Address
         );
         
         return {
@@ -1139,7 +1127,7 @@ export function registerEVMTools(server: McpServer) {
             text: JSON.stringify({
               collection: tokenAddress,
               owner: ownerAddress,
-              network,
+              DEFAULT_NETWORK,
               balance: balance.toString()
             }, null, 2)
           }]
@@ -1163,8 +1151,7 @@ export function registerEVMTools(server: McpServer) {
     {
       tokenAddress: z.string().describe("The contract address of the ERC1155 token collection (e.g., '0x76BE3b62873462d2142405439777e971754E8E77')"),
       tokenId: z.string().describe("The ID of the specific token to check the balance for (e.g., '1234')"),
-      ownerAddress: z.string().describe("The wallet address to check the token balance for (e.g., '0x1234...')"),
-      network: z.string().optional().describe("Network name (e.g., 'vitruveo', 'optimism', 'arbitrum', 'base', 'polygon') or chain ID. ERC1155 tokens exist across many networks. Defaults to Ethereum mainnet.")
+      ownerAddress: z.string().describe("The wallet address to check the token balance for (e.g., '0x1234...')")
     },
     async ({ tokenAddress, tokenId, ownerAddress }) => {
       try {
@@ -1172,7 +1159,7 @@ export function registerEVMTools(server: McpServer) {
           tokenAddress as Address, 
           ownerAddress as Address, 
           BigInt(tokenId),
-          network
+          DEFAULT_NETWORK
         );
         
         return {
@@ -1182,7 +1169,7 @@ export function registerEVMTools(server: McpServer) {
               contract: tokenAddress,
               tokenId,
               owner: ownerAddress,
-              network,
+              DEFAULT_NETWORK,
               balance: balance.toString()
             }, null, 2)
           }]

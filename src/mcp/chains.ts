@@ -1,43 +1,42 @@
 import { type Chain } from 'viem';
 
+// Default configuration values
+export const DEFAULT_RPC_URL = 'https://rpc.vitruveo.xyz';
+export const DEFAULT_CHAIN_ID = 1490;
+export const DEFAULT_NETWORK = 'vitruveo';
+export const DEFAULT_NETWORK_NAME = 'Vitruveo';
+
 
 const vitruveo = {
   id: 1490,
-  name: 'Vitruveo',
-  network: 'vitruveo',
+  name: DEFAULT_NETWORK_NAME,
+  network: DEFAULT_NETWORK,
   iconUrl: 'https://irp.cdn-website.com/a01407ef/dms3rep/multi/fav-vit-857c1762.png',
   iconBackground: '#fff',
   nativeCurrency: {
     decimals: 18,
-    name: 'Vitruveo',
+    name: DEFAULT_NETWORK_NAME,
     symbol: 'VTRU',
   },
   rpcUrls: {
-    public: { http: ['https://rpc.vitruveo.xyz/'] },
-    default: { http: ['https://rpc.vitruveo.xyz/'] },
+    public: { http: [DEFAULT_RPC_URL] },
+    default: { http: [DEFAULT_RPC_URL] },
   },
   blockExplorers: {
-    default: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.net' },
+    default: { name: `${DEFAULT_NETWORK_NAME} Explorer`, url: 'https://explorer.vitruveo.net' },
   },
   testnet: false,
 };
 
-// Default configuration values
-export const DEFAULT_RPC_URL = 'https://rpc.vitruveo.xyz/';
-export const DEFAULT_CHAIN_ID = 1490;
+export const DEFAULT_CHAIN = vitruveo;
 
 // Map chain IDs to chains
 export const chainMap: Record<number, Chain> = {
-
-  1490: vitruveo,
-
+  1490: DEFAULT_CHAIN,
 };
 
-
-export const rpcUrlMap: Record<number, string> = {
-  
-  1490: 'https://rpc.vitruveo.xyz/',
-  
+export const rpcUrlMap: Record<number, string> = { 
+  1490: DEFAULT_RPC_URL,
 };
 
 /**
@@ -51,20 +50,18 @@ export function resolveChainId(chainIdentifier: number | string): number {
 
 /**
  * Returns the chain configuration for the specified chain ID or network name
- * @param chainIdentifier Chain ID (number) or network name (string)
  * @returns The chain configuration
  * @throws Error if the network is not supported (when string is provided)
  */
-export function getChain(chainIdentifier: number | string = DEFAULT_CHAIN_ID): Chain {
-  return vitruveo;
+export function getChain(): Chain {
+  return DEFAULT_CHAIN;
 }
 
 /**
  * Gets the appropriate RPC URL for the specified chain ID or network name
- * @param chainIdentifier Chain ID (number) or network name (string)
  * @returns The RPC URL for the specified chain
  */
-export function getRpcUrl(chainIdentifier: number | string = DEFAULT_CHAIN_ID): string {
+export function getRpcUrl(): string {
   return DEFAULT_RPC_URL;
 }
 
@@ -73,5 +70,5 @@ export function getRpcUrl(chainIdentifier: number | string = DEFAULT_CHAIN_ID): 
  * @returns Array of supported network names (excluding short aliases)
  */
 export function getSupportedNetworks(): string[] {
-  return ['vitruveo'];
+  return [DEFAULT_NETWORK];
 } 

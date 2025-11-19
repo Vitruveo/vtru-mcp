@@ -27,8 +27,8 @@ export function getPublicClient(): PublicClient {
   }
   
   // Create a new client
-  const chain = getChain(network);
-  const rpcUrl = getRpcUrl(network);
+  const chain = getChain();
+  const rpcUrl = getRpcUrl();
   
   const client = createPublicClient({
     chain,
@@ -45,8 +45,8 @@ export function getPublicClient(): PublicClient {
  * Create a wallet client for a specific network and private key
  */
 export function getWalletClient(privateKey: Hex): WalletClient {
-  const chain = getChain(network);
-  const rpcUrl = getRpcUrl(network);
+  const chain = getChain();
+  const rpcUrl = getRpcUrl();
   const account = privateKeyToAccount(privateKey);
   
   return createWalletClient({
@@ -57,9 +57,9 @@ export function getWalletClient(privateKey: Hex): WalletClient {
 }
 
 /**
- * Get an Ethereum address from a private key
+ * Get a Vitruveo address from a private key
  * @param privateKey The private key in hex format (with or without 0x prefix)
- * @returns The Ethereum address derived from the private key
+ * @returns The Vitruveo address derived from the private key
  */
 export function getAddressFromPrivateKey(privateKey: Hex): Address {
   const account = privateKeyToAccount(privateKey);

@@ -213,20 +213,25 @@ Token/NFT (read-only):
 
 ```
 vtru-mcp/
+├── app/
+│   └── mcp/
+│       └── route.js
 ├── src/
-│   ├── index.ts
-│   ├── server/http-server.ts
-│   ├── core/
-│   │   ├── chains.ts
-│   │   ├── tools.ts
-│   │   ├── resources.ts
-│   │   └── services/
-│   │       ├── balance.ts
-│   │       ├── blocks.ts
-│   │       ├── transactions.ts
-│   │       ├── contracts.ts
-│   │       ├── tokens.ts
-│   │       └── clients.ts
+│   └── mcp/
+│       ├── chains.ts
+│       ├── tools.ts
+│       ├── resources.ts
+│       └── services/
+│           ├── balance.ts
+│           ├── blocks.ts
+│           ├── clients.ts
+│           ├── contracts.ts
+│           ├── ens.ts
+│           ├── index.ts
+│           ├── tokens.ts
+│           ├── transactions.ts
+│           ├── transfer.ts
+│           └── utils.ts
 ├── bin/cli.js
 ├── build/
 └── package.json

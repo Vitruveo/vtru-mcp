@@ -4,13 +4,11 @@ import {
 } from 'viem';
 import { getPublicClient } from './clients.ts';
 
-const network = "vitruveo";
-
 /**
  * Get the current block number for a specific network
  */
 export async function getBlockNumber(): Promise<bigint> {
-  const client = getPublicClient(network);
+  const client = getPublicClient();
   return await client.getBlockNumber();
 }
 
@@ -20,7 +18,7 @@ export async function getBlockNumber(): Promise<bigint> {
 export async function getBlockByNumber(
   blockNumber: number
 ): Promise<Block> {
-  const client = getPublicClient(network);
+  const client = getPublicClient();
   return await client.getBlock({ blockNumber: BigInt(blockNumber) });
 }
 
@@ -30,7 +28,7 @@ export async function getBlockByNumber(
 export async function getBlockByHash(
   blockHash: Hash
 ): Promise<Block> {
-  const client = getPublicClient(network);
+  const client = getPublicClient();
   return await client.getBlock({ blockHash });
 }
 
@@ -38,6 +36,6 @@ export async function getBlockByHash(
  * Get the latest block for a specific network
  */
 export async function getLatestBlock(): Promise<Block> {
-  const client = getPublicClient(network);
+  const client = getPublicClient();
   return await client.getBlock();
 } 
